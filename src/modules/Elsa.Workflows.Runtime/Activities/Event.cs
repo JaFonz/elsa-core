@@ -87,8 +87,10 @@ public class Event : Trigger<object?>
 
     private async ValueTask GetInputPayloadAndCompleteActivityAsync(ActivityExecutionContext context)
     {
-        var input = context.GetWorkflowInput<object?>(EventInputWorkflowInputKey);
-        context.SetResult(input);
+        if (context.TryGetWorkflowInput<object>(EventInputWorkflowInputKey,  out var eventPayload))
+        {
+            context.SetResult(eventPayload);  
+        }        
         await context.CompleteActivityAsync();
     }
 }
